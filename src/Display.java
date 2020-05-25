@@ -1,6 +1,8 @@
-public abstract class Display {
+public class Display {
     public static void inf(String s) {
-        System.out.println("\033[0;32m" + "[ OK ] " + "\033[0m" + s);
+        synchronized (Display.class) {
+            System.out.println("\033[0;32m" + "[ OK ] " + "\033[0m" + s);
+        }
     }
 
     public static void errinfo(String s) {
