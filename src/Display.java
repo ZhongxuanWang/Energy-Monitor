@@ -1,4 +1,4 @@
-public class Display {
+public abstract class Display {
     public static void inf(String s) {
         System.out.println("\033[0;32m" + "[ OK ] " + "\033[0m" + s);
     }
