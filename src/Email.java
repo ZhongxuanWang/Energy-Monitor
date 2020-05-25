@@ -1,43 +1,42 @@
-import java.util.*;
-import javax.mail.*;
-import javax.mail.internet.*;
-import javax.activation.*;
+import java.io.File;
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.JsonNode;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
+
 
 public class Email {
-    private final String email;
-    private final String psw;
-    private final String smtp;
+    private final String smtp_server = "in-v3.mailjet.com";
+    private final String add;
 
-    public Email(String email_address, String password, String smtp_server) {
-        this.email = email_address;
-        this.psw = password;
-        this.smtp = smtp_server;
+    public Email(String add) {
+        this.add = add;
     }
 
-    public boolean send() {
-        String to = "sonoojaiswal1988@gmail.com";//change accordingly
-        String from = "sonoojaiswal1987@gmail.com";
-        String host = "localhost";
-
-        //Get the session object
-        Properties properties = System.getProperties();
-        properties.setProperty(smtp, host);
-
-        Session session = Session.getDefaultInstance(properties);
-
-        //compose the message
-        try{
-            MimeMessage message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(from));
-            message.addRecipient(Message.RecipientType.TO,new InternetAddress(email));
-            message.setSubject("Ping");
-            message.setText("Hello, this is example of sending email  ");
-            Transport.send(message);
-            System.out.println("Message sent successfully.");
-        }catch (MessagingException mex) {
-            mex.printStackTrace();
+    public boolean send(String subject, String content) {
+        try {
+            return sendSimpleMessage(subject, content).toString().contains("Thank you.");
+        } catch (UnirestException e) {
             return false;
         }
-        return true;
+    }
+
+    /**     Here I used mailgun API to send emails. However,
+     *      the delay is sometimes very big. To ensure your
+     *      devices are OK, please consider using other ways. PLEASE CHECK YOUR PROMOTION/SPAM/UPDATE FOLDER!!!!!! */
+
+    private JsonNode sendSimpleMessage(String subject, String content) throws UnirestException {
+
+        String YOUR_DOMAIN_NAME = "mail.dlearninglab.com";
+        String API_KEY = "b2f4ca60d3cfe7c678312870317e3b08-7fba8a4e-ef956365";
+
+        HttpResponse<JsonNode> request = Unirest.post("https://api.mailgun.net/v3/" + YOUR_DOMAIN_NAME + "/messages")
+			.basicAuth("api", API_KEY)
+                .queryString("from", "eMonitor@example.com")
+                .queryString("to", add)
+                .queryString("subject", subject)
+                .queryString("text", content)
+                .asJson();
+        return request.getBody();
     }
 }
