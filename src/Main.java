@@ -9,11 +9,11 @@ public class Main{
         Display.inf("Welcome to eMonitor! System is deploying and it will display a message when it's ready.");
 
         Display.inf("Deploying CPU Temperature Monitor...");
-        TempMonitor tm = new TempMonitor();
+        CPUMonitor tm = new CPUMonitor();
 
         Display.inf("Deploying Memory Monitor...");
-        TempMonitor mem = new TempMonitor();
-
+        MemMonitor mm = new MemMonitor();
+        Display.inf(mm.getUsage());
 
 //        sendEmail("eMonitor Deployment ready at " + Display.getTimeNow());
     }
