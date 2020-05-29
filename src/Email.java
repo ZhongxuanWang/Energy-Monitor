@@ -5,17 +5,23 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 
 
 public class Email {
-    private final String smtp_server = "in-v3.mailjet.com";
     private final String add;
 
     public Email(String add) {
         this.add = add;
     }
 
+    /**
+     * Send email
+     * @param subject the subject of the email
+     * @param content the content of the email
+     * @return whether the email sent
+     */
     public boolean send(String subject, String content) {
         try {
             return sendSimpleMessage(subject, content).toString().contains("Thank you.");
         } catch (UnirestException e) {
+            e.printStackTrace();
             return false;
         }
     }
@@ -27,7 +33,7 @@ public class Email {
     private JsonNode sendSimpleMessage(String subject, String content) throws UnirestException {
 
         String YOUR_DOMAIN_NAME = "mail.dlearninglab.com";
-        String API_KEY = "b2f4ca60d3cfe7c678312870317e3b08-7fba8a4e-ef956365";
+        String API_KEY = "";
 
         HttpResponse<JsonNode> request = Unirest.post("https://api.mailgun.net/v3/" + YOUR_DOMAIN_NAME + "/messages")
 			.basicAuth("api", API_KEY)

@@ -20,17 +20,21 @@ public class Display {
     }
 
     public static String getTerminalOutput(String com) {
-        String re = "";
+        StringBuilder re = new StringBuilder();
         try {
-            re = new BufferedReader(
+            BufferedReader br = new BufferedReader(
                     new InputStreamReader(
                             Runtime.getRuntime().exec(com).getInputStream()
                     )
-            ).readLine();
+            );
+            String line;
+            while((line = br.readLine()) != null) {
+                re.append(line).append("\n");
+            }
             if (re.length() == 0) throw new Exception();
         } catch (Exception e) {
             Display.errinfo("Unable to get command output at " + Display.getTimeNow() + ". Content: " + com);
         }
-        return re;
+        return re.toString();
     }
 }
